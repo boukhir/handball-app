@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des matches{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-3">Gestion des matches</h2>
+        <div>
+            <!-- Match search form -->
+            <form action="{{ path('searchAMatchPage') }}" method="get" onsubmit="return validateForm();"
+                  class="manageMatchesHeader">
+                <div class="d-flex justify-content-between mt-4 mb-2">
+                    <!-- Input to search a match by team name -->
+                    <div class="form-outline searchATeamInput">
+                        <input class="form-control" type="search" name="teamName"
+                               value="{{ app.request.query.get('teamName') }}">
+                        <label class="form-label">Chercher les matches d'une équipe par son nom</label>
+                    </div>
+                    <!-- Input to search a match by period -->
+                    <div class="input-group form-inline justify-content-center matchPeriodSwitch">
+                        <input type="radio" class="btn-check" name="matchPeriod" id="previous" autocomplete="off"
+                               value="previous" {{ app.request.query.get('matchPeriod') == 'previous' ? 'checked' : '' }}>
+                        <label class="btn btn-secondary" for="previous">Anciens</label>
+
+                        <input type="radio" class="btn-check" name="matchPeriod" id="all" autocomplete="off"
+                               value="all" {{ app.request.query.get('matchPeriod') != 'previous' and app.request.query.get('matchPeriod') != 'next'? 'checked' : '' }}>
+                        <label class="btn btn-secondary" for="all">Tous</label>
+
+                        <input type="radio" class="btn-check" name="matchPeriod" id="next" autocomplete="off"
+                               value="next" {{ app.request.query.get('matchPeriod') == 'next' ? 'checked' : '' }}>
+                        <label class="btn btn-secondary" for="next">Prochains</label>
+                    </div>
+                    <!-- Input to search a match by date range -->
+                    <input type="text" name="datefilter" class="form-control searchDateRange"
+                           value="{{ app.request.query.get('datefilter') | default('Plage de dates') }}">
+                </div>
+                <div class="d-flex justify-content-between mt-2 mb-4 ">
+                    <div>
+                        <!-- Preview matches button -->
+                        <a class="btn btn-secondary" href="{{ path('previewMatchesPage') }}">
+                            <i class="fas fa-eye"></i></i> Voir l'aperçu des matches
+                        </a>
+                        <!-- New match button -->
+                        <a class="btn btn-secondary" href="{{ path('newMatchPage') }}">
+                            <i class="fa-solid fa-plus"></i> Ajouter un nouveau match
+                        </a>
+                    </div>
+                    <div class="input-group w-auto matchSearchBtns">
+                        {% if app.request.attributes.get('_route') == "searchAMatchPage" %}
+                            <!-- Cancel button -->
+                            <button type="button" class="btn btn-danger matchSearchReset"
+                                    onclick="location.href='{{ path('manageMatchesPage') }}';">
+                                <i class="fa-solid fa-xmark text-white"></i> Annuler
+                            </button>
+                        {% endif %}
+                        <!-- Search button -->
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Chercher
+                        </button>
+                    </div>
+                </div>
+            </form>
+            {% if matches|length == 0 %}
+                <!-- Information message displayed when there is no match available -->
+                <div class="alert alert-info" role="alert">
+                    <img src="{{ asset('img/no-results.png') }}" class="noResultsImage"> Aucun match trouvé
+                </div>
+            {% else %}
+                <div class="formCards">
+                    {% for match in matches %}
+                        <div class="card d-flex aFormCard">
+                            <div class="card-body">
+                                <!-- Edit a match form -->
+                                <form method="post" action="{{ path('editAMatchPage', {'id': match.id}) }}">
+                                    <!-- Home team's select -->
+                                    <div class="mb-2">
+                                        <select class="select-team-{{ match.id }}" placeholder="Équipe locale"
+                                                value="{{ match.getEquipeLocale() }}" name="equipe_locale"></select>
+                                    </div>
+                                    <!-- Opposing team's input -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="equipe_adverse" class="form-control"
+                                               value="{{ match.getEquipeAdverse }}">
+                                        <label class="form-label" for="equipe_adverse">Équipe adverse</label>
+                                    </div>
+                                    <div class="row">
+                                        <!-- Host's input -->
+                                        <div class="col col-8">
+                                            <div class="form-outline mb-2">
+                                                <input type="text" name="hote" class="form-control"
+                                                       value="{{ match.hote }}">
+                                                <label class="form-label" for="hote">Hôte</label>
+                                            </div>
+                                        </div>
+                                        <div class="col col-4 d-flex justify-content-center align-items-center">
+                                            <!-- Checkbox for matches played at home -->
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="domicile_exterieur" {{ match.getDomicileExterieur() == 1 ? "checked" : "" }}/>
+                                                <label class="form-check-label" for="domicile_exterieur">À
+                                                    domicile</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Gymnasium's input -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="gymnase" class="form-control"
+                                               value="{{ match.gymnase }}">
+                                        <label class="form-label" for="gymnase">Gymnase</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <!-- The input of the date and hour -->
+                                            <div class="form-outline mb-2">
+                                                <input type="datetime-local"
+                                                       name="date_heure" {% if match.getDateHeure() is not null %} class="form-control"
+                                                    value="{{ match.getDateHeure()|date('Y-m-d\\TH:i:s') }}" {% else %}class="form-control custom-placeholder"{% endif %}
+                                                       onchange="updatePlaceholder(this)">
+                                                <label class="form-label" for="date_heure">Date et heure</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <!-- The input of the week number -->
+                                            <div class="form-outline mb-2">
+                                                <input type="number" name="num_semaine" class="form-control"
+                                                       value="{{ match.getNumSemaine() }}">
+                                                <label class="form-label" for="num_semaine">Semaine</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <!-- The input of the day number -->
+                                            <div class="form-outline mb-2">
+                                                <input type="number" name="num_journee" class="form-control"
+                                                       value="{{ match.getNumJournee() }}">
+                                                <label class="form-label" for="num_journee">Journée</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- The button to visit the match's page -->
+                                    <a class="btn btn-info mb-2" href="{{ path('showAMatchPage', {'id': match.id}) }}">
+                                        <i class="fas fa-pager"></i> Visiter la page du match
+                                    </a>
+                                    <!-- The button to save the changes that were made -->
+                                    <button type="submit" class="btn btn-success mb-2" onclick="modifyMatch()"><i
+                                                class="fa-solid fa-pen"></i>Enregistrer les modifications
+                                    </button>
+                                </form>
+                                <!-- Delete a match form -->
+                                <form method="post" action="{{ path('deleteAMatchPage', {'id': match.id}) }}"
+                                      id="delete-form-{{ match.id }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ match.id) }}">
+                                    <!-- Delete a match button -->
+                                    <button class="btn btn-danger" onclick="deleteMatch(event, '{{ match.id }}')"><i
+                                                class="fas fa-trash"></i>Supprimer le match
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the matches section -->
+    <script src="{{ asset('js/matches.js') }}"></script>
+    <script type="text/javascript">
+        // Initializes the selects with the search bar for the home teams with their names
+        {% for match in matches %}
+        $('.select-team-{{ match.id }}').selectize({
+            options: {{ teamNames|json_encode|raw }},
+            labelField: 'libelle',
+            searchField: ['libelle'],
+            sortField: 'libelle',
+            onInitialize: function () {
+                let defaultValue = $('.select-team-{{ match.id }}').attr('value');
+                if (defaultValue) {
+                    this.setValue(defaultValue);
+                }
+            }
+        });
+        {% endfor %}
+    </script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aperçu des matches{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-4">Aperçu des matches</h2>
+        <!-- Match search form -->
+        <form action="{{ path('searchAMatchPage') }}" method="get" onsubmit="return validateForm();"
+              class="previewMatchesHeader">
+            <!-- Hidden input with default value to be redirected back to this page -->
+            <input type="hidden" name="page" value="preview">
+            <div class="d-flex justify-content-between mt-4 mb-2">
+                <!-- Input to search a match by team name -->
+                <div class="form-outline searchATeamInput">
+                    <input class="form-control" type="search" name="teamName"
+                           value="{{ app.request.query.get('teamName') }}">
+                    <label class="form-label">Chercher les matches d'une équipe par son nom</label>
+                </div>
+                <!-- Input to search a match by period -->
+                <div class="input-group form-inline justify-content-center matchPeriodSwitch">
+                    <input type="radio" class="btn-check" name="matchPeriod" id="previous" autocomplete="off"
+                           value="previous" {{ app.request.query.get('matchPeriod') == 'previous' ? 'checked' : '' }}>
+                    <label class="btn btn-secondary" for="previous">Anciens</label>
+
+                    <input type="radio" class="btn-check" name="matchPeriod" id="all" autocomplete="off"
+                           value="all" {{ app.request.query.get('matchPeriod') != 'previous' and app.request.query.get('matchPeriod') != 'next'? 'checked' : '' }}>
+                    <label class="btn btn-secondary" for="all">Tous</label>
+
+                    <input type="radio" class="btn-check" name="matchPeriod" id="next" autocomplete="off"
+                           value="next" {{ app.request.query.get('matchPeriod') == 'next' ? 'checked' : '' }}>
+                    <label class="btn btn-secondary" for="next">Prochains</label>
+                </div>
+                <!-- Input to search a match by date range -->
+                <input type="text" name="datefilter" class="form-control searchDateRange"
+                       value="{{ app.request.query.get('datefilter') | default('Plage de dates') }}">
+            </div>
+            <div class="d-flex {% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}justify-content-between{% else %}justify-content-end{% endif %}  mt-2 mb-4 ">
+                {% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
+                    <!-- The button to go to the manage matches page  -->
+                    <a class="btn btn-secondary" href="{{ path('manageMatchesPage') }}">
+                        <i class="fas fa-cogs"></i> Afficher la page de gestion des matches
+                    </a>
+                {% endif %}
+                <div class="input-group w-auto matchSearchBtns">
+                    {% if app.request.attributes.get('_route') == "searchAMatchPage" %}
+                        <!-- The button to cancel  -->
+                        <button type="button" class="btn btn-danger matchSearchReset"
+                                onclick="location.href='{{ path('previewMatchesPage') }}';">
+                            <i class="fa-solid fa-xmark text-white"></i> Annuler
+                        </button>
+                    {% endif %}
+                    <!-- The button to search  -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Chercher
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% if matches|length == 0 %}
+            <!-- Information message displayed when there is no match available -->
+            <div class="alert alert-info" role="alert">
+                <img src="{{ asset('img/no-results.png') }}" class="noResultsImage"> Aucun match trouvé
+            </div>
+        {% else %}
+            <!-- A dictionary to translate the months in French -->
+            {% set frenchMonths = {
+                'January': 'Janvier',
+                'February': 'Février',
+                'March': 'Mars',
+                'April': 'Avril',
+                'May': 'Mai',
+                'June': 'Juin',
+                'July': 'Juillet',
+                'August': 'Août',
+                'September': 'Septembre',
+                'October': 'Octobre',
+                'November': 'Novembre',
+                'December': 'Décembre'
+            } %}
+            <div class="w-100 mx-auto">
+                {% for match in matches %}
+                    <!-- A card of a match -->
+                    <div class="matchesCards" onclick="location.href='{{ path('showAMatchPage', {'id': match.id}) }}';">
+                        <!-- Card's header -->
+                        <div class="matchesCardsSection">
+                            <span>
+                                {% if match.getDateHeure() is not null %}
+                                    {{ match.getDateHeure()|date('d ') ~ frenchMonths[match.getDateHeure()|date('F')] ~ match.getDateHeure()|date(' Y') }}
+                                    {% if match.getDateHeure() < date() %}
+                                        <i>(passé)</i>
+                                    {% endif %}
+                                {% else %}
+                                    <i>Date non disponible</i>
+                                {% endif %}
+                            </span>
+                            <span>{% if match.getGymnase() is not null %}{{ match.getGymnase() }}{% else %}<i> Nom du gymnase non disponible </i>{% endif %}</span>
+                        </div>
+                        <!-- Card's main section -->
+                        <div class="matchesCardsSection">
+                            <span>{{ match.getEquipeLocale() }}</span>
+                            <span>{% if match.getDateHeure() is not null %}{{ match.getDateHeure()|date('H:i') }}{% else %}-{% endif %}</span>
+                            <span>{{ match.getEquipeAdverse }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the matches section -->
+    <script src="{{ asset('js/matches.js') }}"></script>
+{% endblock %}

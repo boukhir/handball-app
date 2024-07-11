@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+    <!-- Supplementary style (includes custom media queries) -->
+    <link rel="stylesheet" href="{{ asset('css/styleSupplementaire.css') }}">
+
+    <!-- Bootstrap's supplementary CSS files -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css"
+            rel="stylesheet"
+    />
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+
+    <!-- Selectize -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+            integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+
+    {% block stylesheets %}
+
+    {% endblock %}
+</head>
+<body class="container">
+{% block header %}
+<header>
+    <!-- Main navigation menu -->
+    <nav class="navbar navbar-expand-lg ftco_navbar ftco-navbar-light">
+        <div class="container navContainer">
+            <!-- Logo -->
+            <a class="navbar-brand" href="{{ path('homePage') }}"> <img class="logoMenu"
+                                                                        src="{{ asset('img/logoEquipe.png') }}"></a>
+            <!-- Facebook's page link -->
+            <div class="social-media order-lg-last">
+                <p class="mb-0 d-flex">
+                    <a href="https://www.facebook.com/HBGG07/" target="_blank"
+                       class="d-flex align-items-center justify-content-center"><i class="fa-brands fa-facebook-f"></i></a>
+                </p>
+            </div>
+            {% if app.user %}
+                <!-- Logout button -->
+                <div class="order-lg-last d-flex justify-content-center">
+                    <a href="{{ path('deconnexion') }}">
+                        <button class="logBtn logOutBtn">{{ app.user.displayName }}<i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </a>
+                </div>
+            {% else %}
+                <!-- Login button -->
+                <div class="order-lg-last d-flex justify-content-center">
+                    <a href="{{ path('connexion') }}">
+                        <button class="logBtn logInBtn">Se connecter<i class="fas fa-sign-in-alt"></i></button>
+                    </a>
+                </div>
+            {% endif %}
+            <!-- Menu button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                    aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="fa fa-bars"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <!-- List of headings -->
+                <ul class="navbar-nav ml-auto mr-md-3">
+                    {% set currentRoute = path(app.request.get('_route'), app.request.get('_route_params')) %}
+
+                    {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item {% if '/home' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('homePage') }}" class="nav-link">Accueil</a>
+                        </li>
+                        <li class="nav-item {% if '/teams' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('previewTeamsPage') }}" class="nav-link">Gestion des équipes</a>
+                        </li>
+                        <li class="nav-item {% if '/matches' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('previewMatchesPage') }}" class="nav-link ">Gestion des matchs</a>
+                        </li>
+                        <li class="nav-item {% if '/planning' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('planning') }}" class="nav-link">Planning</a>
+                        </li>
+                    {% elseif is_granted('ROLE_USER') and is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item {% if '/home' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('homePage') }}" class="nav-link">Accueil</a>
+                        </li>
+                        <li class="nav-item {% if '/teams' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('previewTeamsPage') }}" class="nav-link">Gestion des équipes</a>
+                        </li>
+                        <li class="nav-item {% if '/matches' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('previewMatchesPage') }}" class="nav-link ">Gestion des matchs</a>
+                        </li>
+                        <li class="nav-item {% if '/users' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('manageUsersPage') }}" class="nav-link ">Gestion des utilisateurs</a>
+                        </li>
+                        <li class="nav-item {% if '/planning' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('planning') }}" class="nav-link">Planning</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item {% if '/home' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('homePage') }}" class="nav-link">Accueil</a>
+                        </li>
+                        <li class="nav-item {% if '/teams' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('previewTeamsPage') }}" class="nav-link">Équipes</a>
+                        </li>
+                        <li class="nav-item {% if '/matches' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('previewMatchesPage') }}" class="nav-link ">Matchs</a>
+                        </li>
+                        <li class="nav-item {% if '/planning' in currentRoute %} active{% endif %}">
+                            <a href="{{ path('planning') }}" class="nav-link">Planning</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+</header>
+{% block menu %}{% endblock %}
+{% block body %}{% endblock %}
+<!-- JQuery JS-->
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+
+<!-- Bootstrap JS-->
+<script src="{{ asset('js/popper.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+
+<!-- Sweet Alert JS-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+
+<!-- Bootstrap's supplementary JS files-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+<!-- MDB JS-->
+<script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"
+></script>
+
+<!-- Moment.js -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<!-- Date Range Picker JS-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<!-- Selectize JS-->
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+></script>
+
+{% block javascripts %}
+
+{% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un nouvel utilisateur{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-4">Ajouter un nouvel utilisateur</h2>
+        {% for message in app.flashes('erreurUnique') %}
+            <!-- Error message -->
+            <div class="alert alert-danger">
+                <img src="{{ asset('img/error.png') }}" class="errorImage"> {{ message }}
+            </div>
+        {% endfor %}
+        <div class="w-50 mx-auto">
+            <!-- New user form -->
+            {{ form_start(form) }}
+            <!-- The input for the username -->
+            <div class="form-outline mb-2">
+                {{ form_widget(form.username) }}
+                {{ form_label(form.username) }}
+                {{ form_errors(form.username) }}
+            </div>
+            <!-- The input for the user display name -->
+            <div class="form-outline mb-2">
+                {{ form_widget(form.displayname) }}
+                {{ form_label(form.displayname) }}
+            </div>
+            <!-- The input for the user password -->
+            <div class="form-outline mb-2">
+                {{ form_widget(form.password) }}
+                {{ form_label(form.password) }}
+            </div>
+            <!-- The select for the user role -->
+            {{ form_widget(form.role) }}
+
+            <!-- The submit button of the new user form -->
+            {{ form_widget(form.submit) }}
+            <!-- The button to go back to the manage users page -->
+            {{ form_widget(form.back) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

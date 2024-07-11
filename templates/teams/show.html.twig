@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ team.libelle }}{% endblock %}
+
+{% block body %}
+    <div class="container w-75" id="showATeamContainer">
+        <!-- A card of a team -->
+        <div class="card mt-5 mx-auto w-75" id="showATeamCard">
+            <!-- The team's photo -->
+            <img src="{{ asset('uploads/' ~ team.getUrlPhoto()) }}" class="card-img-top"/>
+            <!-- Card's body -->
+            <div class="card-body">
+                <!-- Card's header -->
+                <h5 class="card-title">Équipe des {{ team.libelle }}</h5>
+                <!-- Card's main section -->
+                <p class="card-text">Encadrée par {{ team.entraineur }}.
+                    <br> Créneaux d'entraînement : {{ team.creneaux }}.
+                    <br> {{ team.commentaire }}
+                </p>
+                <!-- Card's footer -->
+                <p class="card-text d-flex justify-content-between">
+                    <!-- Button to visit the team's FFHB page -->
+                    <a class="btn btn-success" href="{{ team.getUrlResultCalendrier() }}" target="_blank">
+                        <i class="fas fa-external-link"></i>Page des {{ team.libelle }} sur le site FFHB
+                    </a>
+                    <!-- Button to go back to manage teams page -->
+                    <a class="btn btn-secondary" onclick="window.history.back();">
+                        <i class="bi bi-arrow-90deg-left"></i> Retour à la liste des équipes
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the teams section -->
+    <script src="{{ asset('js/teams.js') }}"></script>
+{% endblock %}

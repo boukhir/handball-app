@@ -1,0 +1,626 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2&display=swap');
+body {
+    font-family: 'Exo 2', sans-serif !important;
+    background-color: rgb(255, 255, 235) !important;
+}
+
+/* Main navigation menu style */
+.navbar {
+    background-color: rgb(255, 255, 217) !important;
+}
+.nav-link {
+    font-size: 17px !important;
+}
+.logoMenu {
+    width: 55px;
+}
+nav {
+    font-family: 'Exo 2', sans-serif !important;
+    margin: 20px 0px !important;
+    box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px !important;
+}
+
+
+/* Cards style for the teams management page */
+.card {
+    width: 600px !important;
+    margin: 10px;
+}
+.formCards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+#homeCarousel {
+    width: 90% !important;
+    margin: auto;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+}
+form {
+    display: grid;
+}
+#searchBtn {
+    width: 460px !important;
+}
+.aFormCard {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px !important;
+    background-color: rgba(250, 250, 250, 0.63) !important;
+}
+.aFormCard:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
+    background: linear-gradient(270deg, rgba(206, 241, 226, 0.82), rgba(233, 248, 194, 0.85) 60%);
+}
+
+@media (max-width: 991.98px) {
+    .navbar-expand-lg>.container, .navbar-expand-lg>.container-fluid {
+        padding-right: 10px !important;
+        padding-left: 10px !important;
+    }
+}
+.alert-info, .alert-danger {
+    padding: 10px !important;
+}
+.noResultsImage, .errorImage {
+    width: 70px !important;
+    margin-right: 10px !important;
+}
+
+.btn-success {
+    background-color: #B9F6CA !important;
+    color: #1B5E20 !important;
+    box-shadow: revert !important;
+}
+.btn-success:hover, :not(.btn-check)+.btn-success:hover {
+    box-shadow: revert !important;
+    background-color: #b2e7c1 !important;
+}
+
+.btn-danger {
+    background-color: rgba(255, 138, 128, 0.66) !important;
+    color: #D50000 !important;
+    box-shadow: revert !important;
+}
+.btn-danger:hover, :not(.btn-check)+.btn-danger:hover {
+    box-shadow: revert !important;
+    background-color: rgba(255, 138, 128, 0.83) !important;
+}
+
+.btn-info {
+    background-color: #A7FFEB !important;
+    color: #008a79 !important;
+    box-shadow: revert !important;
+}
+.btn-info:hover, :not(.btn-check)+.btn-info:hover {
+    box-shadow: revert !important;
+    background-color: #a0f1de !important;
+}
+
+.btn-light {
+    background-color: #ffe0bc !important;
+    color: #bd6501 !important;
+}
+.btn-light:hover {
+    background-color: #f1d1af !important;
+}
+
+.fa-pen, .fa-trash, .fa-external-link, .fa-eye , .fa-cogs, .fa-pager {
+    margin-right: 5px !important;
+}
+.fa-futbol {
+    margin-right: 2px !important;
+}
+
+button.searchReset {
+    background-color: #E53935 !important;
+}
+button.searchReset:hover, :not(.btn-check)+button.searchReset:hover {
+    background-color: rgba(229, 57, 53, 0.87) !important;
+}
+
+.disabledInput{
+    background-color: transparent !important;
+}
+
+/* ------- Preview the teams page CSS ------- */
+
+.photoContainer{
+    padding: 1em 0;
+    float: left;
+    width: 50%;
+}
+@media screen and (max-width: 768px){
+    .photoContainer{
+        display: block;
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 992px){
+    .photoContainer{
+        width: 33.33333%;
+    }
+}
+
+.photoContainer .title{
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.photoContainer .content-title{
+    text-transform: none;
+}
+
+.photoContent {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.photoContent .content-overlay {
+    background: rgba(0,0,0,0.6);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    -webkit-transition: all 0.4s ease-in-out 0s;
+    -moz-transition: all 0.4s ease-in-out 0s;
+    transition: all 0.4s ease-in-out 0s;
+    border-radius: 5px;
+}
+
+.photoContent:hover .content-overlay{
+    opacity: 1;
+}
+
+.content-image{
+    border-radius: 5px;
+    width: 100%;
+}
+
+.content-details {
+    position: absolute;
+    text-align: center;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    -moz-transition: all 0.3s ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
+}
+
+.photoContent:hover .content-details{
+    top: 50%;
+    left: 50%;
+    opacity: 1;
+}
+
+.content-details h3{
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+}
+
+.content-details p{
+    color: #fff;
+    font-size: 0.8em;
+}
+
+.fadeIn-bottom{
+    top: 80%;
+}
+
+/* "Preview teams page" button's CSS */
+.content-details {
+    flex-direction: column;
+    display: flex;
+}
+.content-details a {
+    display: inline-block;
+    color: black;
+    padding: 5px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+.content-details .content-text {
+    margin-bottom: 0px;
+    color: white;
+    font-weight: 800;
+}
+
+.content-details a:hover {
+    background-color: #009719;
+}
+
+/* ----------- Matches section CSS --------------- */
+
+/* "preview a match page" and "show a match page" cards CSS */
+.matchesCards, .aMatchCard {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    padding: 20px;
+    margin: 10px auto;
+    max-width: 1000px;
+}
+
+.matchesCards:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(270deg, rgba(0, 255, 157, 0.8), rgba(214, 255, 0, 0.8) 60%);
+}
+
+.matchesCardsSection, .aMatchCardSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    border-radius: 50px;
+}
+
+.matchesCards div:nth-child(1), .aMatchCard div:nth-child(1)  {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.matchesCards div:nth-child(2), .aMatchCard div:nth-child(2)  {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.matchesCards div:nth-child(2) span:nth-child(1), .aMatchCard div:nth-child(2) span:nth-child(1) {
+    text-align: right;
+}
+.matchesCards div:nth-child(2) span:nth-child(1), .matchesCards div:nth-child(2) span:nth-child(3),
+.aMatchCard div:nth-child(2) span:nth-child(1), .aMatchCard div:nth-child(2) span:nth-child(3) {
+    font-size: 20px;
+}
+.matchesCards div:nth-child(2) span:nth-child(1),
+.matchesCards div:nth-child(2) span:nth-child(3),
+.aMatchCard div:nth-child(2) span:nth-child(1),
+.aMatchCard div:nth-child(2) span:nth-child(3){
+    flex-basis: 45%;
+}
+.matchesCards div:nth-child(2) span:nth-child(2), .aMatchCard div:nth-child(2) span:nth-child(2) {
+    text-align: center;
+    flex-basis: 10%;
+}
+
+.searchDateRange {
+    text-align: center !important;
+    width: 225px !important;
+    background-color: transparent !important;
+}
+.matchPeriodSwitch {
+    width: auto !important;
+}
+.matchPeriodSwitch label:first-of-type {
+    border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+}
+.searchATeamInput {
+    width: 40% !important;
+}
+
+button.matchSearchReset {
+    color: white !important;
+    background-color: #E53935 !important;
+}
+button.matchSearchReset:hover, :not(.btn-check)+button.matchSearchReset:hover {
+    background-color: rgba(229, 57, 53, 0.87) !important;
+}
+.matchSearchBtns .fa-search, .matchSearchBtns .fa-xmark{
+    margin-right: 5px !important;
+}
+
+
+.custom-placeholder:not(:focus)::-webkit-datetime-edit {
+    color: transparent;
+}
+.custom-placeholder:not(:focus)::-moz-datetime-edit {
+    color: transparent;
+}
+.custom-placeholder:not(:focus)::-ms-datetime-edit {
+    color: transparent;
+}
+.custom-placeholder:not(:focus)::placeholder {
+    color: #999;
+}
+
+/* Login/logout button CSS */
+.logBtn {
+    background-color: #9aa7f9;
+    text-align: center;
+    color: white;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.logOutBtn:hover {
+    background-color: #fe9c9a;
+}
+.logInBtn:hover {
+    background-color: #46e227;
+}
+.fa-sign-out-alt, .fa-sign-in-alt {
+    margin-left: 5px;
+}
+
+/* Select with search bar (Selectize's library) CSS */
+.custom-select {
+    background-color: transparent !important;
+}
+.selectize-control.single .selectize-input {
+    background: transparent !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    height: 38px !important;
+}
+.selectize-dropdown [data-selectable].option, .selectize-input>input[placeholder] {
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+}
+
+a.btn, button.btn {
+    white-space: normal !important;
+    text-align: center !important;
+}
+
+/* Header nav responsive design */
+@media screen and (max-width: 1400px) and (min-width: 992px){
+    .navbar-collapse {
+        text-align: center;
+    }
+    .ftco-navbar-light .navbar-nav > .nav-item > .nav-link {
+        padding-right: 0px;
+    }
+    header nav ul li {
+        display: flex;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 389px) {
+    header nav ul li {
+        display: flex;
+        align-items: center;
+    }
+    .navbar-toggler {
+        margin-right: 20px !important;
+        padding-left: 0px !important;
+        padding-bottom: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 768px){
+    .content-details h3 {
+        font-size: 20px;
+    }
+}
+@media screen and (max-width: 350px){
+    .content-details h3 {
+        font-size: 16px;
+    }
+}
+
+/* Teams section media queries */
+@media screen and (max-width: 991px){
+    .previewTeamsHeader {
+        flex-direction: column;
+    }
+    .previewTeamsHeader form {
+        width: 100% !important;
+    }
+    .previewTeamsHeader > div{
+        width: 100% !important;
+        margin-top: 15px !important;
+        justify-content: center !important;
+    }
+}
+@media screen and (max-width: 359px){
+    .previewTeamsHeader {
+        flex-direction: column;
+    }
+    .previewTeamsHeader form {
+       zoom: 90% !important;
+    }
+    .previewTeamsHeader > div a {
+        zoom: 80% !important;
+    }
+}
+
+@media screen and (max-width: 1200px){
+    .manageTeamsHeader {
+        flex-direction: column;
+    }
+    .manageTeamsHeader form {
+        width: 100% !important;
+    }
+    .manageTeamsHeader > div {
+        width: 100% !important;
+        margin-top: 15px !important;
+        justify-content: space-around !important;
+    }
+}
+@media screen and (max-width: 516px){
+    .manageTeamsHeader > div {
+        flex-direction: column;
+    }
+    .manageTeamsHeader > div a:nth-of-type(2) {
+        margin-top: 10px;
+    }
+}
+
+
+@media screen and (max-width: 1200px){
+    #newTeamDivID {
+        width: 65% !important;
+    }
+    #aMatchCardId, #showMatchContainer {
+        width: 100% !important;
+    }
+    #showATeamCard, #showATeamContainer {
+        width: 80% !important;
+    }
+}
+@media screen and (max-width: 991px){
+    #newTeamDivID, #showATeamCard, #showATeamContainer {
+        width: 100% !important;
+    }
+}
+
+@media screen and (max-width: 767px){
+    #newTeamDivID > form > div:nth-child(7) {
+        flex-direction: column !important;
+    }
+    #aMatchCardId > div:nth-child(3), #aMatchCardId > div:nth-child(4) {
+        flex-direction: column-reverse !important;
+    }
+    #aMatchCardId > div:nth-child(3) > span:nth-child(2) {
+        text-align: center;
+    }
+    #showATeamCard .card-text {
+        flex-direction: column;
+    }
+    #showATeamCard .card-text a:nth-child(1) {
+        margin-bottom: 7px;
+    }
+}
+
+
+/* Matches section media queries */
+@media screen and (max-width: 1200px) and (max-width: 991px){
+    .previewMatchesHeader, .manageMatchesHeader {
+        zoom: 95% !important;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .previewMatchesHeader > div:first-of-type, .manageMatchesHeader > div:first-of-type {
+        flex-direction: column;
+        align-items: center;
+    }
+    .searchATeamInput{
+        width: 100% !important;
+    }
+    .matchPeriodSwitch {
+        margin: 15px !important;
+    }
+}
+
+@media screen and (max-width: 575px){
+    .previewMatchesHeader > div:nth-child(2){
+        flex-direction: column-reverse;
+    }
+    .previewMatchesHeader > div:nth-child(2) button{
+        width: 100% !important;
+        height: 36px !important;
+        margin-bottom: 15px !important;
+    }
+}
+@media screen and (max-width: 345px){
+    .previewMatchesHeader, .manageMatchesHeader {
+        zoom: 88% !important;
+    }
+}
+@media screen and (max-width: 768px){
+    .matchesCards div:nth-child(2) span:nth-child(2), .aMatchCard div:nth-child(2) span:nth-child(2) {
+        flex-basis: 20%;
+    }
+    .matchesCards, .aMatchCard {
+        zoom: 90%;
+    }
+    .matchesCards span {
+        text-align: center !important;
+    }
+    .manageMatchesHeader > div:nth-child(2){
+        flex-direction: column-reverse;
+    }
+    .manageMatchesHeader > div:nth-child(2) button{
+        width: 100% !important;
+        height: 36px !important;
+    }
+    .manageMatchesHeader > div:nth-child(2) > div:nth-child(1){
+        display: flex;
+        flex-direction: column;
+    }
+    .manageMatchesHeader > div:nth-child(2) > div:nth-child(1) a{
+        width: 100% !important;
+        height: 36px !important;
+        margin-top: 10px !important;
+    }
+}
+@media screen and (max-width: 375px){
+    .matchesCards div:nth-child(1), .aMatchCard div:nth-child(1) {
+        flex-direction: column;
+    }
+    .matchesCards, .aMatchCard {
+        zoom: 80%;
+    }
+}
+@media screen and (max-width: 528px){
+    .aFormCard form > div:nth-child(3), .newMatchDiv form > div:nth-child(3){
+        flex-direction: column;
+    }
+    .aFormCard form > div:nth-child(3) > div:nth-child(1), .newMatchDiv form > div:nth-child(3) > div:nth-child(1){
+        width: 100% !important;
+    }
+    .aFormCard form > div:nth-child(3) > div:nth-child(2), .newMatchDiv form > div:nth-child(3) > div:nth-child(2) {
+        width: 100% !important;
+        margin: 5px 0px !important;
+    }
+    .aFormCard form > div:nth-child(5) > div:nth-child(2) > div, .aFormCard form > div:nth-child(5) > div:nth-child(3) > div:not(.form-notch-trailing),
+    .newMatchDiv form > div:nth-child(5) > div:nth-child(2) > div, .newMatchDiv form > div:nth-child(5) > div:nth-child(3) > div:not(.form-notch-trailing){
+        min-width: 80px;
+    }
+    .aFormCard form:nth-child(2) button {
+        min-width: 80px;
+    }
+}
+@media screen and (max-width: 330px){
+    .aFormCard form > div:nth-child(5) > div:nth-child(1),.newMatchDiv form > div:nth-child(5) > div:nth-child(1) {
+        width: 204px;
+    }
+}
+
+@media screen and (max-width: 991px){
+    #newMatchDivID {
+        width: 100% !important;
+    }
+}
+
+
+/* Manage users media queries */
+@media screen and (max-width: 991px){
+    .manageUserDiv {
+        flex-direction: column;
+    }
+    .manageUserDiv > form{
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+    .manageUserDiv > div{
+        width: 100% !important;
+    }
+}

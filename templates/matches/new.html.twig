@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un nouveau match{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-4">Ajouter un nouveau match</h2>
+        {% for message in app.flashes('erreurUnique') %}
+            <div class="alert alert-danger">
+                <img src="{{ asset('img/error.png') }}" class="errorImage"> {{ message }}
+            </div>
+        {% endfor %}
+        <div class="w-50 mx-auto newMatchDiv" id="newMatchDivID">
+            <!-- New match form -->
+            <form method="post" action="{{ path('createNewMatchPage') }}">
+                <!-- Home team's select -->
+                <div class="mb-2">
+                    <select class="select-team" placeholder="Équipe locale" name="equipe_locale" required></select>
+                </div>
+                <!-- Opposing team's input -->
+                <div class="form-outline mb-2">
+                    <input type="text" name="equipe_adverse" class="form-control" required>
+                    <label class="form-label" for="equipe_adverse">Équipe adverse</label>
+                </div>
+                <div class="row">
+                    <div class="col col-8">
+                        <!-- Host's input -->
+                        <div class="form-outline mb-2">
+                            <input type="text" name="hote" class="form-control">
+                            <label class="form-label" for="hote">Hôte</label>
+                        </div>
+                    </div>
+                    <!-- Checkbox for matches played at home -->
+                    <div class="col col-4 d-flex justify-content-center align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="domicile_exterieur"/>
+                            <label class="form-check-label" for="domicile_exterieur">À domicile</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gymnasium's input -->
+                <div class="form-outline mb-2">
+                    <input type="text" name="gymnase" class="form-control">
+                    <label class="form-label" for="gymnase">Gymnase</label>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <!-- The input of the date and hour -->
+                        <div class="form-outline mb-2">
+                            <input type="datetime-local" name="date_heure" class="form-control custom-placeholder" onchange="updatePlaceholder(this)">
+                            <label class="form-label" for="date_heure">Date et heure</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- The input of the week number -->
+                        <div class="form-outline mb-2">
+                            <input type="number" name="num_semaine" class="form-control" required>
+                            <label class="form-label" for="num_semaine">Semaine</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- The input of the day number -->
+                        <div class="form-outline mb-2">
+                            <input type="number" name="num_journee" class="form-control" required>
+                            <label class="form-label" for="num_journee">Journée</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- The submit button of the new match form -->
+                <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Ajouter le nouveau match
+                </button>
+                <!-- The button to go back to the manage matches page -->
+                <button type="button" class="btn btn-secondary mt-2" onclick="location.href='{{ path('manageMatchesPage') }}';">
+                    <i class="bi bi-arrow-90deg-left"></i> Retour à la liste des matches
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the matches section -->
+    <script src="{{asset('js/matches.js')}}"></script>
+    <script type="text/javascript">
+        // Initializes the select with the search bar for the home team with their names
+        $('.select-team').selectize({
+            options: {{ teamNames|json_encode|raw }},
+            labelField: 'libelle',
+            searchField: ['libelle'],
+            sortField: 'libelle',
+        });
+    </script>
+{% endblock %}

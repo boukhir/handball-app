@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Visualisation du planning{% endblock %}
+{% block stylesheets %}
+    <!-- Essential JS 2 Scheduler's dependent material theme -->
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-base/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-buttons/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-calendars/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-dropdowns/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-inputs/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-splitbuttons/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-lists/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-popups/styles/material.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-navigations/styles/material.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Essential JS 2 Scheduler's material theme -->
+    <link href="https://cdn.syncfusion.com/ej2/19.4.48/ej2-schedule/styles/material.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block body %}
+    <!-- The div of the Schedule -->
+    <div id="Schedule"></div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Essential JS 2 all script -->
+    <script src="https://cdn.syncfusion.com/ej2/19.4.48/dist/ej2.min.js" type="text/javascript"></script>
+
+    <!-- Essential JS 2 Scheduler script -->
+    <script src="https://cdn.syncfusion.com/ej2/19.4.48/ej2-schedule/dist/ej2-schedule.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/19.4.48/ej2-schedule/dist/ej2-schedule.min.js"></script>
+
+    <!-- Imports the JS script of the planning section -->
+    <script src="{{asset('js/planning.js')}}"></script>
+
+    <script>
+        // The array of data created in the controller is converted to JSON
+        let data = {{ planningData|json_encode|raw }};
+        console.log(data);
+        // Dates are formatted to be compatible with the Schedule component
+        data.forEach((aMatch) => {
+            aMatch['StartTime'] = new Date(aMatch['StartTime'][0],(parseInt(aMatch['StartTime'][1]) - 1),aMatch['StartTime'][2],aMatch['StartTime'][3],aMatch['StartTime'][4]);
+            aMatch['EndTime'] = new Date(aMatch['EndTime'][0],(parseInt(aMatch['EndTime'][1]) - 1),aMatch['EndTime'][2],(parseInt(aMatch['EndTime'][3]) + 1),aMatch['EndTime'][4]);
+        });
+
+        // The schedule is initialized with the data obtained and the parameters chosen by default
+        let scheduleObj = new ej.schedule.Schedule({
+            width: '100%',
+            height: '85vh',
+            locale: "fr-CH", // French language
+            readonly: true, // Disables editing
+            views: ['Day','Week', 'Month'],
+            selectedDate: new Date(),
+            minDate: new Date(new Date().getTime() - (21 * 24 * 60 * 60 * 1000)), // 3 weeks
+            maxDate: new Date(new Date().getTime() + (56 * 24 * 60 * 60 * 1000)), // 8 weeks
+            eventSettings: { dataSource: data }
+        });
+        scheduleObj.appendTo('#Schedule');
+    </script>
+{% endblock %}

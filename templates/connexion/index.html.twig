@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if error %}
+            <!-- Error message -->
+            <div class="alert alert-danger">
+                <img src="{{ asset('img/error.png') }}" class="errorImage"> Erreur de connexion. Veuillez vérifier vos
+                identifiants et réessayer.
+            </div>
+        {% endif %}
+        <h2 class="text-center mt-5 mb-4">Connexion</h2>
+        <div class="d-flex justify-content-center">
+            <!-- The connection form -->
+            <form action="{{ path('connexion') }}" method="post">
+                <!-- Username input -->
+                <div class="form-outline mb-4">
+                    <input type="text" class="form-control" id="username" name="_username"
+                           placeholder="Votre identifiant" value="{{ last_username }}"/>
+                    <label class="form-label" for="username">Identifiant</label>
+                </div>
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input type="password" class="form-control" id="password" name="_password"
+                           placeholder="Votre mot de passe"/>
+                    <label class="form-label" for="password">Mot de passe</label>
+                </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

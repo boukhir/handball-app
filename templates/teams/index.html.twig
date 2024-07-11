@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des équipes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-3">Gestion des équipes</h2>
+        <div>
+            <div class="d-flex justify-content-between mt-4 mb-4 manageTeamsHeader">
+                <!-- Team search form -->
+                <form class="form-inline w-50" action="{{ path('searchATeamPage') }}" method="get"
+                      onsubmit="return validateForm();">
+                    <div class="input-group w-100">
+                        <!-- Input to search a team by name or coach -->
+                        <div class="form-outline">
+                            <input class="form-control  w-100" type="search" name="search"
+                                   value="{{ app.request.query.get('search') }}">
+                            <label class="form-label">Chercher une équipe par son nom ou entraîneur</label>
+                        </div>
+                        {% if app.request.attributes.get('_route') == "searchATeamPage" %}
+                            <!-- Cancel button -->
+                            <button type="button" class="btn btn-danger searchReset"
+                                    onclick="location.href='{{ path('manageTeamsPage') }}';">
+                                <i class="fa-solid fa-xmark text-white"></i>
+                            </button>
+                        {% endif %}
+                        <!-- Search button -->
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="d-flex w-50 justify-content-around">
+                    <!-- Preview teams button -->
+                    <a class="btn btn-secondary" href="{{ path('previewTeamsPage') }}">
+                        <i class="fas fa-eye"></i></i> Voir l'aperçu des équipes
+                    </a>
+                    <!-- New team button -->
+                    <a class="btn btn-secondary" href="{{ path('newTeamPage') }}">
+                        <i class="fa-solid fa-plus"></i> Ajouter une nouvelle équipe
+                    </a>
+                </div>
+            </div>
+            {% if teams|length == 0 %}
+                <!-- Information message displayed when there is no team available -->
+                <div class="alert alert-info" role="alert">
+                    <img src="{{ asset('img/no-results.png') }}" class="noResultsImage"> Aucune équipe trouvée
+                </div>
+            {% else %}
+                <div class="formCards">
+                    {% for team in teams %}
+                        <div class="card d-flex aFormCard">
+                            <div class="card-body">
+                                <!-- Edit a team form. Enctype is used for $FILE (file upload)-->
+                                <form method="post" action="{{ path('editAteamPage', {'id': team.libelle}) }}"
+                                      enctype="multipart/form-data">
+                                    <!-- The input for the team name -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="libelle" class="form-control"
+                                               id="libelle-{{ team.libelle|replace({' ':''}) }}"
+                                               value="{{ team.libelle }}">
+                                        <label class="form-label" for="libelle">Nom de l'équipe</label>
+                                    </div>
+                                    <!-- The input for the coach -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="entraineur" class="form-control"
+                                               value="{{ team.entraineur }}">
+                                        <label class="form-label" for="entraineur">Entraîneur</label>
+                                    </div>
+
+                                    <!-- The input for the training session -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="creneaux" class="form-control"
+                                               value="{{ team.creneaux }}">
+                                        <label class="form-label" for="creneaux">Créneaux</label>
+                                    </div>
+
+                                    <!-- The group of inputs for the team photo -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="url_photoInfo"
+                                               class="form-control disabledInput visibleUrl_photo-{{ team.libelle|replace({' ':''}) }}"
+                                               value="{{ team.getUrlPhoto() }}" disabled>
+                                        <label class="form-label" for="url_photoInfo">URL de la photo</label>
+
+                                        <input type="hidden" name="url_photo"
+                                               class="hiddenUrl_photo-{{ team.libelle|replace({' ':''}) }}"
+                                               value="{{ team.getUrlPhoto() }}">
+                                        <input type="file" name="uploadUrl_photo" accept="image/png, image/jpeg"
+                                               class="form-control fileInputUrl_photo-{{ team.libelle|replace({' ':''}) }}"
+                                               onchange="UrlPhotoUpdate('{{ team.libelle|replace({' ':''}) }}')"/>
+                                    </div>
+
+                                    <!-- The group of inputs for the team photo -->
+                                    <div class="form-outline mb-2">
+                                        <input type="text" name="url_result_calendrier" class="form-control"
+                                               value="{{ team.getUrlResultCalendrier() }}">
+                                        <label class="form-label" for="url_result_calendrier">URL des résultats</label>
+                                    </div>
+
+                                    <!-- The group of inputs for the team photo -->
+                                    <div class="form-outline mb-2">
+                                        <textarea name="commentaire"
+                                                  class="form-control">{{ team.commentaire }}</textarea>
+                                        <label class="form-label" for="commentaire">Commentaire</label>
+                                    </div>
+
+                                    <!-- The button to visit the team's page -->
+                                    <a class="btn btn-info mb-2"
+                                       href="{{ path('showATeamPage', {'id': team.libelle}) }}">
+                                        <i class="fas fa-pager"></i>Visiter la page de l'équipe
+                                    </a>
+
+                                    <!-- The button to see the matches of the current team -->
+                                    <a class="btn btn-light mb-2"
+                                       href="{{ path('searchAMatchPage', {'teamName': team.libelle, 'datefilter': 'Plage de dates', 'matchPeriod': 'all'}) }}">
+                                        <i class="fas fa-futbol"></i> Voir tous les matches de cette équipe
+                                    </a>
+
+                                    <!-- The button to save the changes that were made -->
+                                    <button type="submit" class="btn btn-success mb-2" onclick="modifyTeam()"><i
+                                                class="fa-solid fa-pen"></i>Enregistrer les modifications
+                                    </button>
+                                </form>
+                                <!-- Delete a team form -->
+                                <form method="post" action="{{ path('deleteATeamPage', {'id': team.libelle}) }}"
+                                      id="delete-form-{{ team.libelle|replace({' ':''}) }}">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('delete' ~ team.libelle) }}">
+                                    <!-- Delete a team button -->
+                                    <button class="btn btn-danger"
+                                            onclick="deleteTeam(event, '{{ team.libelle|replace({' ':''}) }}')"><i
+                                                class="fas fa-trash"></i>Supprimer l'équipe
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the teams section -->
+    <script src="{{ asset('js/teams.js') }}"></script>
+{% endblock %}

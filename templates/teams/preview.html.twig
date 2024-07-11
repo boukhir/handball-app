@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aperçu des équipes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-4">Aperçu des équipes</h2>
+        <div class="d-flex justify-content-end mt-4 mb-4 previewTeamsHeader">
+            <!-- Team search form -->
+            <form class="form-inline w-50" action="{{ path('searchATeamPage') }}" method="get"
+                  onsubmit="return validateForm();">
+                <div class="input-group w-100">
+                    <!-- Input to search a team by name or coach -->
+                    <div class="form-outline">
+                        <input class="form-control  w-100" type="search" name="search"
+                               value="{{ app.request.query.get('search') }}">
+                        <label class="form-label">Chercher une équipe par son nom ou entraîneur</label>
+                    </div>
+                    {% if app.request.attributes.get('_route') == "searchATeamPage" %}
+                        <!-- Cancel button -->
+                        <button type="button" class="btn btn-danger searchReset"
+                                onclick="location.href='{{ path('previewTeamsPage') }}';">
+                            <i class="fa-solid fa-xmark text-white"></i>
+                        </button>
+                    {% endif %}
+                    <!-- Search button -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="d-flex w-50 justify-content-end">
+                {% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
+                    <!-- Manage teams button -->
+                    <a class="btn btn-secondary" href="{{ path('manageTeamsPage') }}">
+                        <i class="fas fa-cogs"></i> Afficher la page de gestion des équipes
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% if teams|length == 0 %}
+            <!-- Information message displayed when there is no team available -->
+            <div class="alert alert-info" role="alert">
+                <img src="{{ asset('img/no-results.png') }}" class="noResultsImage"> Aucune équipe trouvée
+            </div>
+        {% else %}
+            <div class="d-flex flex-wrap w-100 mx-auto">
+                {% for team in teams %}
+                    <!-- A card of a team -->
+                    <div class="photoContainer">
+                        <div class="photoContent">
+                            <div class="content-overlay"></div>
+                            <!-- The team's photo -->
+                            <img class="content-image" src="{{ asset('uploads/' ~ team.getUrlPhoto()) }}"
+                                 alt="{{ team.libelle }}">
+                            <div class="content-details fadeIn-bottom">
+                                <h3 class="content-title">{{ team.libelle }}</h3>
+                                {% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
+                                    <!-- The button to manage the current team -->
+                                    <a href="{{ path('searchATeamPage', {'search': team.libelle, 'page': 'management'}) }}">
+                                        <p class="content-text">Gérer cette équipe</p>
+                                    </a>
+                                {% endif %}
+                                <!-- The button to see the page of the current team -->
+                                <a href="{{ path('showATeamPage', {'id': team.libelle}) }}">
+                                    <p class="content-text">Voir la page de cette équipe</p>
+                                </a>
+                                <!-- The button to see the matches of the current team -->
+                                <a href="{{ path('searchAMatchPage', {'page': "preview", 'teamName': team.libelle, 'datefilter': 'Plage de dates', 'matchPeriod': 'all'}) }}">
+                                    <p class="content-text">Voir tous les matches de cette équipe</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the teams section -->
+    <script src="{{ asset('js/teams.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% if match.getDateHeure() is not null %}Match du {{ match.getDateHeure()|date('d/m/Y H:i') }}{% else %}Match numéro {{ match.id }}{% endif %} {% endblock %}
+
+{% block body %}
+    <div class="container w-75" id="showMatchContainer">
+        <!-- A dictionary to translate the months in French -->
+        {% set frenchMonths = {
+            'January': 'Janvier',
+            'February': 'Février',
+            'March': 'Mars',
+            'April': 'Avril',
+            'May': 'Mai',
+            'June': 'Juin',
+            'July': 'Juillet',
+            'August': 'Août',
+            'September': 'Septembre',
+            'October': 'Octobre',
+            'November': 'Novembre',
+            'December': 'Décembre'
+        } %}
+        <!-- A card of a match -->
+        <div class="card mt-5 mx-auto w-75 aMatchCard" id="aMatchCardId">
+            <!-- Card's header -->
+            <div class="aMatchCardSection">
+                <span>{% if match.getDateHeure() is not null %}{{ match.getDateHeure()|date('d ') ~ frenchMonths[match.getDateHeure()|date('F')] ~ match.getDateHeure()|date(' Y') }}{% else %}
+                        <i>Date non disponible</i>{% endif %}</span>
+                <span>{% if match.getGymnase() is not null %}{{ match.getGymnase() }}{% else %}<i> Nom du gymnase non disponible </i>{% endif %}</span>
+            </div>
+            <!-- Card's main section -->
+            <div class="aMatchCardSection">
+                <span>{{ match.getEquipeLocale() }}</span>
+                <span>{% if match.getDateHeure() is not null %}{{ match.getDateHeure()|date('H:i') }}{% else %}-{% endif %}</span>
+                <span>{{ match.getEquipeAdverse }}</span>
+            </div>
+            <!-- Card's footer -->
+            <div class="d-flex justify-content-between align-items-center w-100 mt-2">
+                <span>Numéro de semaine : {{ match.getNumSemaine() }} </span>
+                <span> {% if match.getHote() is not null %}Hôte : {{ match.getHote() }}{% else %}<i> Nom de l'hôte non disponible </i>{% endif %} </span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center w-100 mb-2">
+                <span>Numéro de journée : {{ match.getNumJournee() }}</span>
+                <span>Match à {{ match.getDomicileExterieur() == 1 ? 'domicile' : "l'extérieur" }}</span>
+            </div>
+            <!-- Button to go back to manage matches page -->
+            <a class="btn btn-secondary" onclick="window.history.back();">
+                <i class="bi bi-arrow-90deg-left"></i> Retour à la liste des matches
+            </a>
+        </div>
+    </div>
+{% endblock %}

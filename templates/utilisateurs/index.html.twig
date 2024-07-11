@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-3">Gestion des utilisateurs</h2>
+        <div class="d-flex justify-content-between mt-4 mb-4 manageUserDiv">
+            <!-- User search form -->
+            <form class="form-inline w-50" action="{{ path('searchAUserPage') }}" method="get"
+                  onsubmit="return validateForm();">
+                <div class="input-group w-100">
+                    <!-- Input to search a user by name or username -->
+                    <div class="form-outline">
+                        <input class="form-control  w-100" type="search" name="search"
+                               value="{{ app.request.query.get('search') }}">
+                        <label class="form-label">Chercher un utilisateur par son nom ou identifiant</label>
+                    </div>
+                    {% if app.request.attributes.get('_route') == "searchAUserPage" %}
+                        <!-- Cancel button -->
+                        <button type="button" class="btn btn-danger searchReset"
+                                onclick="location.href='{{ path('manageUsersPage') }}';">
+                            <i class="fa-solid fa-xmark text-white"></i>
+                        </button>
+                    {% endif %}
+                    <!-- Search button -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="d-flex w-50 justify-content-end">
+                <!-- New user button -->
+                <a class="btn btn-secondary" href="{{ path('newUserPage') }}">
+                    <i class="fa-solid fa-plus"></i> Ajouter un nouvel utilisateur
+                </a>
+            </div>
+        </div>
+        {% if users|length == 0 %}
+            <!-- Information message displayed when there is no user available -->
+            <div class="alert alert-info" role="alert">
+                <img src="{{ asset('img/no-results.png') }}" class="noResultsImage"> Aucun utilisateur trouvé
+            </div>
+        {% else %}
+            <div class="formCards">
+                {% for user in users %}
+                    <div class="card d-flex aFormCard">
+                        <div class="card-body">
+                            <!-- Edit a user form -->
+                            <form method="post" action="{{ path('editAUserPage', {'id': user.username}) }}">
+                                <!-- The input for the username -->
+                                <div class="form-outline mb-2">
+                                    <input type="text" name="username" class="form-control"
+                                           id="libelle-{{ user.username }}" value="{{ user.username }}">
+                                    <label class="form-label" for="username">Identifiant</label>
+                                </div>
+                                <!-- The input for the user display name -->
+                                <div class="form-outline mb-2">
+                                    <input type="text" name="displayname" class="form-control"
+                                           value="{{ user.displayname }}">
+                                    <label class="form-label" for="displayname">Nom</label>
+                                </div>
+                                <!-- The input for the user password -->
+                                <div class="form-outline mb-2">
+                                    <input type="password" name="password" class="form-control">
+                                    <label class="form-label" for="password">Nouveau mot de passe</label>
+                                </div>
+                                <!-- The select for the user role -->
+                                <select class="browser-default custom-select mb-2" name="role">
+                                    {% if 'ROLE_USER' in user.roles and 'ROLE_ADMIN' not in user.roles %}
+                                        <option value="ROLE_USER" selected>Utilisateur</option>
+                                    {% else %}
+                                        <option value="ROLE_USER">Utilisateur</option>
+                                    {% endif %}
+                                    {% if 'ROLE_ADMIN' in user.roles %}
+                                        <option value="ROLE_ADMIN" selected>Administrateur</option>
+                                    {% else %}
+                                        <option value="ROLE_ADMIN">Administrateur</option>
+                                    {% endif %}
+                                </select>
+                                <!-- The button to save the changes that were made -->
+                                <button type="submit" class="btn btn-success mb-2" onclick="modifyUser()"><i
+                                            class="fa-solid fa-pen"></i>Enregistrer les modifications
+                                </button>
+                            </form>
+                            <!-- Delete a user form -->
+                            <form method="post" action="{{ path('deleteAUserPage', {'id': user.username}) }}"
+                                  id="delete-form-{{ user.username }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.username) }}">
+                                <!-- Delete a user button -->
+                                <button class="btn btn-danger" onclick="deleteUser(event, '{{ user.username }}')"><i
+                                            class="fas fa-trash"></i>Supprimer l'utilisateur
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- Imports the JS script of the users section -->
+    <script src="{{ asset('js/users.js') }}"></script>
+{% endblock %}
